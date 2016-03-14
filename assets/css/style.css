@@ -1,0 +1,27 @@
+/* RESET */
+*{
+    margin: 0;
+    padding: 0;
+}
+.titulo{
+    margin-bottom: 30px;
+}
+.table{
+    margin: 10px 0 20px 0;
+}
+.table-head{
+    background: #000000;
+    color: #ffffff;
+}
+.form-control{
+    margin: 5px 0;
+}
+.selecionado{
+    background: #cccccc;
+    font-weight: bold;
+}
+p.alert.alert-danger{
+    font-size: 11pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
