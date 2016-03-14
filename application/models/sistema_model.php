@@ -10,12 +10,11 @@
 //            $this->db->insert('tabela_webmeetings', $data);
 //        }
 //
-//        function get_all(){
-//            $this->db->select('day');
-//            $this->db->select('webmeetings');
-//
-//            $this->db->from('tabela_webmeetings');
-//
-//            return $this->db->get();
-//        }
+        function get_contatos(){
+            return $this->db->get('contatos');
+        }
+
+        function get_operadoras(){
+            return $this->db->get('operadoras');
+        }
     }
