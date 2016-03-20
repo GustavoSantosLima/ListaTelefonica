@@ -6,12 +6,19 @@
             parent::__construct();
         }
 
-//        function add($data){
-//            $this->db->insert('tabela_webmeetings', $data);
-//        }
-//
         function get_contatos(){
-            return $this->db->get('contatos');
+            $this->db->select('*');
+            $this->db->join('operadoras as op', 'op.id = ctt.operadoraId');
+            $this->db->from('contatos as ctt');
+            return $this->db->get()->result();
+        }
+
+        function add_contato($data = NULL){
+            if($data != NULL) {
+                $this->db->insert('contatos', $data);
+            }else{
+                echo "erro";
+            }
         }
 
         function get_operadoras(){

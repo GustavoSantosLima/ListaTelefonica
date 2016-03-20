@@ -14,25 +14,33 @@
         <script src="<?= base_url('assets/js/angular.min.js'); ?>"></script>
         <script>
             angular.module('Sistema', []);
-            angular.module('Sistema').controller('sistemaCtrl', function($scope){
+            angular.module('Sistema').controller('sistemaCtrl', function($scope, $http){
                 $scope.titulo = "Lista Telefônica";
-                $scope.contatos = [
-                    {nome: "Gustavo", telefone: "97964-0501", operadora: {nome: "Claro", codigo: 21, categoria: "Celular"}},
-                    {nome: "Dirce", telefone: "5977-3293", operadora: {nome: "Vivo", codigo: 15, categoria: "Fixo"}},
-                    {nome: "Victor", telefone: "5977-3900", operadora: {nome: "Vivo", codigo: 15, categoria: "Fixo"}}
-                ];
-                $scope.operadoras = [
-                    {nome: "Claro", codigo: 21, categoria: "Celular"},
-                    {nome: "Oi", codigo: 14, categoria: "Celular"},
-                    {nome: "Vivo", codigo: 15, categoria: "Celular"},
-                    {nome: "Tim", codigo: 41, categoria: "Celular"},
-                    {nome: "Embratel", codigo: 22, categoria: "Fixo"},
-                    {nome: "Vivo", codigo: 15, categoria: "Fixo"}
-                ];
+                $scope.contatos = [];
+                $scope.operadoras = [];
+                var CarregarContatos = function(){
+                    $http.get(
+                        "http://localhost/Projetos/ListaTelefonica/sistema/contatos"
+                    ).success(function(data, status){
+                        $scope.contatos = data;
+                    });
+                };
+                var CarregarOperadoras = function(){
+                    $http.get(
+                        "http://localhost/Projetos/ListaTelefonica/sistema/operadoras"
+                    ).success(function(data, status){
+                        $scope.operadoras = data;
+                    });
+                };
                 $scope.adicionaContato = function(contato){
-                    $scope.contatos.push(contato);
-                    delete $scope.contato;
-                    $scope.contatoForm.$setPristine();
+                    $http.post(
+                        "http://localhost/Projetos/ListaTelefonica/sistema/contatos",
+                        contato
+                    ).success(function(data){
+                        delete $scope.contato;
+                        $scope.contatoForm.$setPristine();
+                    });
+
                 };
                 $scope.apagarContato = function(contatos){
                     $scope.contatos = contatos.filter(function(contato){
@@ -44,6 +52,9 @@
                         return contato.selecionado;
                     })
                 };
+
+                CarregarContatos();
+                CarregarOperadoras();
             });
         </script>
     </head>
@@ -64,7 +75,7 @@
                             <td><input type="checkbox" ng-model="contato.selecionado" ></td>
                             <td>{{contato.nome}}</td>
                             <td>{{contato.telefone}}</td>
-                            <td>{{contato.operadora.nome}}</td>
+                            <td>{{contato.operadora.name}}</td>
                         </tr>
                     </table>
                 </div>
@@ -74,7 +85,7 @@
                         <input class="form-control" type="text" ng-model="contato.telefone" name="telefone" placeholder="Digite o telefone..." ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/">
                         <!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">-->
                         <!--<select class="form-control" ng-model="contato.operadora" ng-options="operadora.codigo as operadora.nome for operadora in operadoras">-->
-                        <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras | orderBy: 'nome'">
+                        <select class="form-control" ng-model="contato.operadora" ng-options="operadora.id as operadora.name group by operadora.categoria for operadora in operadoras | orderBy: 'nome'">
                             <option value="">Selecione a operadora</option>
                         </select>
                     </form>
